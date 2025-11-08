@@ -1,0 +1,38 @@
+[project]
+name = "guidefarm-bot"
+version = "1.0.0"
+description = "Automated digital guide creation and publication bot for Ozon marketplace"
+requires-python = ">=3.11"
+dependencies = [
+    "apscheduler>=3.11.1",
+    "email-validator>=2.3.0",
+    "flask>=3.1.2",
+    "flask-cors>=6.0.1",
+    "flask-sqlalchemy>=3.1.1",
+    "google-genai>=1.46.0",
+    "google-generativeai>=0.8.5",
+    "gunicorn>=23.0.0",
+    "jinja2>=3.1.6",
+    "markdown>=3.9",
+    "openai>=2.6.1",
+    "pillow>=12.0.0",
+    "psycopg2-binary>=2.9.11",
+    "python-dotenv>=1.1.1",
+    "python-telegram-bot>=22.5",
+    "replicate>=1.0.7",
+    "requests>=2.32.5",
+    "rouge-score>=0.1.2",
+    "tarsafe>=0.0.5",
+    "tenacity>=9.1.2",
+    "textstat>=0.7.11",
+    "weasyprint>=66.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.1.0",
+    "black>=23.0.0",
+    "mypy>=1.8.0",
+]

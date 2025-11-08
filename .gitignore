@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Project specific
+guides/
+covers/
+ozon_payloads/
+products_database.json
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+data/
+output/
+
+# Temp files
+*.lock.tmp
+.bot_running.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Replit
+.replit
+replit.nix
+.pythonlibs/
+.upm/
+uv.lock

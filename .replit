@@ -1,0 +1,163 @@
+modules = ["python-3.11"]
+[agent]
+expertMode = true
+integrations = ["python_xai:1.0.0", "python_gemini:1.0.0", "python_openai:1.0.0"]
+
+[nix]
+channel = "stable-25_05"
+packages = ["fontconfig", "freetype", "ghostscript", "glib", "harfbuzz", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "openssl", "pango", "postgresql", "tcl", "tk", "zlib"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Telegram Bot (DISABLED)"
+author = 49025624
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"⚠️ Workspace bot ОТКЛЮЧЕН для предотвращения конфликтов\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"🚀 Используйте ТОЛЬКО deployment для запуска бота\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"Если нужно тестировать локально:\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"1. Остановите deployment в панели Publishing\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"2. Подождите 30 секунд\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"3. Запустите: python main.py вручную в Shell\""
+
+[[workflows.workflow]]
+name = "⚠️ WORKSPACE DISABLED"
+author = 49025624
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"╔════════════════════════════════════════════════════════════╗\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"║  ⚠️  WORKSPACE BOT ПОСТОЯННО ОТКЛЮЧЕН                      ║\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"╚════════════════════════════════════════════════════════════╝\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"🚀 Бот работает ТОЛЬКО через deployment (Reserved VM)\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"📍 Как задеплоить:\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"   1. Нажмите 'Deploy' вверху справа\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"   2. Выберите 'Reserved VM Deployment'\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"   3. App type: Background Worker\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"   4. Run command: python main.py (уже настроено)\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"   5. Нажмите 'Deploy'\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"🔧 Для локального тестирования:\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"   1. ОСТАНОВИТЕ deployment (Stop в Publishing)\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"   2. Подождите 30 секунд\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"   3. В Shell: FORCE_WORKSPACE=1 python main.py\""
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"\""
+
+[[workflows.workflow]]
+name = "Mini App Server"
+author = 49025624
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python webapp_server.py"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "GuideFarm Bot"
+
+[[workflows.workflow]]
+name = "GuideFarm Bot"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[deployment]
+deploymentTarget = "vm"
+run = ["python", "main.py"]
+build = ["sh", "-c", "uv sync --frozen && uv cache prune --ci"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80

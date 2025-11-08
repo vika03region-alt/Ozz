@@ -1,0 +1,45 @@
+# Core dependencies
+python-telegram-bot
+python-dotenv
+requests
+
+# AI Models
+google-generativeai
+openai
+
+# PDF Generation
+weasyprint
+markdown
+jinja2
+
+# Scheduling
+apscheduler
+
+# Database
+psycopg2-binary
+flask-sqlalchemy
+
+# Image processing
+pillow
+
+# Quality evaluation
+textstat
+rouge-score
+
+# Utilities
+tenacity
+email-validator
+
+# Web API (NEW)
+fastapi
+uvicorn[standard]
+psutil
+pydantic
+
+# Flask (existing)
+flask
+flask-cors
+gunicorn
+fastapi
+psutil
+uvicorn
