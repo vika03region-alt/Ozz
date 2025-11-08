@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GuideFarm Control Panel</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status.online {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .status.offline {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .input-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .logs {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 4px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .footer .brand {
+            color: #4caf50;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .info-item {
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>GuideFarm Control Panel</h1>
+            <span class="status online" id="botStatus">Bot ONLINE</span>
+        </div>
+
+        <!-- System Info -->
+        <div class="card">
+            <h2>System Status</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Guides Created</div>
+                    <div class="info-value" id="guidesCount">0</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Active Users</div>
+                    <div class="info-value" id="usersCount">1</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">AI Model</div>
+                    <div class="info-value" id="aiModel">Gemini</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Uptime</div>
+                    <div class="info-value" id="uptime">100%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Command Form -->
+        <div class="card">
+            <h2>Send Command to Bot</h2>
+            <div class="input-group">
+                <label for="commandInput">Enter command or message:</label>
+                <textarea id="commandInput" placeholder="/create My Guide Topic"></textarea>
+            </div>
+            <button onclick="sendCommand()">Send to Bot</button>
+        </div>
+
+        <!-- Logs -->
+        <div class="card">
+            <h2>Recent Activity Logs</h2>
+            <div class="logs" id="logsContainer">
+                <div class="log-entry">
+                    <div class="log-time">[2025-11-08 12:00:00]</div>
+                    <div>Bot started successfully</div>
+                </div>
+                <div class="log-entry">
+                    <div class="log-time">[2025-11-08 12:00:05]</div>
+                    <div>Telegram API connected</div>
+                </div>
+                <div class="log-entry">
+                    <div class="log-time">[2025-11-08 12:00:10]</div>
+                    <div>Web App panel opened by user</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="brand">DOBRO</div>
+            <div>Precision. Reliability. Excellence.</div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Telegram Web App
+        let tg = window.Telegram.WebApp;
+
+        // Expand to full height
+        tg.expand();
+
+        // Apply theme colors
+        if (tg.themeParams.bg_color) {
+            document.body.style.background = tg.themeParams.bg_color;
+        }
+
+        // Function to send command to bot
+        function sendCommand() {
+            const input = document.getElementById('commandInput');
+            const command = input.value.trim();
+
+            if (!command) {
+                tg.showAlert('Please enter a command');
+                return;
+            }
+
+            // Send data back to bot
+            tg.sendData(JSON.stringify({
+                type: 'command',
+                command: command,
+                timestamp: new Date().toISOString()
+            }));
+
+            // Add to logs
+            addLog('Command sent: ' + command);
+
+            // Clear input
+            input.value = '';
+
+            // Show success
+            tg.showAlert('Command sent successfully!');
+        }
+
+        // Function to add log entry
+        function addLog(message) {
+            const logsContainer = document.getElementById('logsContainer');
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+
+            const time = new Date().toLocaleString('ru-RU');
+            logEntry.innerHTML = `
+                <div class="log-time">[${time}]</div>
+                <div>${message}</div>
+            `;
+
+            logsContainer.insertBefore(logEntry, logsContainer.firstChild);
+
+            // Keep only last 10 logs
+            while (logsContainer.children.length > 10) {
+                logsContainer.removeChild(logsContainer.lastChild);
+            }
+        }
+
+        // Simulate real-time updates
+        function updateStats() {
+            // This would normally fetch from your backend API
+            // For demo purposes, we'll just show static data
+
+            // You can add API calls here when deployed:
+            // fetch('/api/stats').then(res => res.json()).then(data => { ... });
+        }
+
+        // Check bot status periodically
+        function checkBotStatus() {
+            // In production, check actual bot status via API
+            const statusElement = document.getElementById('botStatus');
+
+            // Example: fetch('/api/status').then(...);
+            // For now, assume online
+            statusElement.textContent = 'Bot ONLINE';
+            statusElement.className = 'status online';
+        }
+
+        // Initialize
+        updateStats();
+        checkBotStatus();
+
+        // Update every 30 seconds
+        setInterval(updateStats, 30000);
+        setInterval(checkBotStatus, 10000);
+
+        // Log that panel was opened
+        addLog('Control panel loaded');
+
+        // Enable main button (optional)
+        tg.MainButton.setText('Send Command');
+        tg.MainButton.onClick(sendCommand);
+        tg.MainButton.show();
+
+        console.log('GuideFarm Web App initialized');
+        console.log('Telegram Web App version:', tg.version);
+        console.log('Platform:', tg.platform);
+    </script>
+</body>
+</html>
